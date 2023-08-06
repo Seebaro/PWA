@@ -1,0 +1,7 @@
+{
+  "name": "OpenSib",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
