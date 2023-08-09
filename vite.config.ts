@@ -13,9 +13,6 @@ export default defineConfig({
     VitePWA({ 
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'favicon.png'],
       registerType: 'autoUpdate',
-      devOptions: {
-        enabled: true
-      },
       manifest: {
         start_url: '/',
         name: 'Sibaro',
