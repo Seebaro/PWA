@@ -1,5 +1,5 @@
 <template>
-  <ion-item button lines="full" :router-link="`/tabs/item/${app.pk}`" :detail="false">
+  <ion-item button lines="full" :router-link="`/tabs/item/${app.id}`" :detail="false">
     <div class="app-root">
       <div class="title-container">
         <ion-img class="icon" :src="app.icon"></ion-img>
@@ -10,19 +10,27 @@
         <ion-button v-if="!installing" size="small" shape="round" @click="install">نصب</ion-button>
         <ion-spinner v-else></ion-spinner>
       </div>
-      <div style="text-align: center;">
+      <div style="text-align: center;" v-if="app.screenshots.length > 0">
         <div class="screenshots">
           <div></div>
-          <img class="screenshot" v-for="screenshot in app.screenshots" :src="screenshot">
+          <div 
+            class="screenshot"
+            v-for="screenshot in app.screenshots"
+            :style="`background-image: url('${screenshot.image}');`"
+          >
+            <svg :viewBox="`0 0 ${screenshot.width} ${screenshot.height}`"></svg>
+          </div>
           <div style="flex-shrink: 0;width: 0.1px"></div>
         </div>
       </div>
+      <div v-else style="height: .5rem"></div>
     </div>
   </ion-item>
 </template>
 
 <script setup lang="ts">
 import type { MApp } from '@/models'
+import { useApplicationStore } from '@/stores/application';
 
 import { IonItem, IonImg, IonNote, IonLabel, IonButton, IonSpinner } from '@ionic/vue'
 import { ref } from 'vue';
@@ -32,15 +40,17 @@ const props = defineProps<{
 }>()
 
 const installing = ref(false)
+const applicationStore = useApplicationStore()
 
-function install($event: Event) {
+async function install($event: Event) {
   $event.stopPropagation()
   installing.value = true
-  window.setTimeout(() => {
-    installing.value = false
-  }, 3000)
-  const manifestEncoded = encodeURIComponent(props.app.manifest)
-  window.location.href = `itms-services://?action=download-manifest&url=${manifestEncoded}`
+  try {
+    await applicationStore.download(props.app)
+  } catch (err) {
+
+  }
+  installing.value = false
 }
 </script>
 
@@ -107,5 +117,9 @@ ion-button {
   border-radius: 1rem;
   border: 0.5px solid var(--border-color);
   scroll-snap-align: start;
+  background-size: cover;
+}
+.screenshot > svg {
+  height: 100%;
 }
 </style>

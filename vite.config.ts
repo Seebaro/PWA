@@ -11,6 +11,7 @@ export default defineConfig({
     vue(),
     legacy(),
     VitePWA({ 
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'favicon.png'],
       registerType: 'autoUpdate',
       devOptions: {
         enabled: true
@@ -20,7 +21,9 @@ export default defineConfig({
         name: 'Sibaro',
         short_name: 'Sibaro',
         description: 'Sibaro Installation Helper',
-        orientation: 'portrait-primary'
+        orientation: 'portrait-primary',
+        theme_color: '#000000',
+        background_color: '#000000',
       },
     })
   ],

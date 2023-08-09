@@ -3,13 +3,27 @@ export enum MAppType {
   Application = 'app',
 }
 
+export interface MScreenshot {
+  image: string
+  width: number
+  height: number
+}
+
 export interface MApp {
-  pk: number
+  id: number
   type: MAppType
   title: string
   subtitle: string
   description: string
-  screenshots: string[]
+  screenshots: MScreenshot[]
   icon: string
+}
+
+export interface MAppManifest {
   manifest: string
+}
+
+export interface MToken {
+  access: string
+  refresh: string
 }
