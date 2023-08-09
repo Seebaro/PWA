@@ -9,7 +9,7 @@ class APIService {
 
     constructor() {
       this.api = axios.create({
-        baseURL: 'https://sibaro.mahsa.me/api/',
+        baseURL: import.meta.env.VITE_API_BASE_URL,
         timeout: 5000,
         headers: {
           'Content-Type': 'application/json'
