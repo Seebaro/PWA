@@ -6,6 +6,7 @@ import { useUserStore } from '@/stores/user';
 import TabList from '@/views/TabList.vue';
 import TabSettings from '@/views/TabSettings.vue';
 import ItemPage from '@/views/ItemPage.vue';
+import { createEnhancedMemoryHistory } from './history';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -48,7 +49,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createMemoryHistory(import.meta.env.BASE_URL),
+  history: createEnhancedMemoryHistory(import.meta.env.BASE_URL),
   routes
 })
 
