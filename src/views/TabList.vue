@@ -3,6 +3,9 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>{{ type === 'game' ? 'بازی ها' : 'اپلیکیشن ها' }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button @click="submitApp()">درخواست</ion-button>
+        </ion-buttons>
       </ion-toolbar>
       <ion-toolbar>
         <ion-searchbar :disabled="loading" :debounce="500" v-model="searchQuery" @ionInput="search" placeholder="جست و جو" inputmode="search"></ion-searchbar>
@@ -61,9 +64,10 @@
   
 <script setup lang="ts">
 import AppItem from '@/components/AppItem.vue';
+import SubmitAppModal from '@/components/SubmitAppModal.vue'
 import { MAppType, MApp } from '@/models';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonRefresher, IonRefresherContent, IonIcon, IonSpinner, IonButton } from '@ionic/vue';
-import { close, cloudOffline, refresh } from 'ionicons/icons';
+import { IonButtons, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonRefresher, IonRefresherContent, IonIcon, IonSpinner, IonButton, toastController, modalController } from '@ionic/vue';
+import { checkmark, close, cloudOffline, refresh } from 'ionicons/icons';
 import { onMounted, ref } from 'vue';
 import { useApplicationStore } from '@/stores/application'
 import type { AxiosError } from 'axios';
@@ -119,6 +123,36 @@ async function handleRefresh($event: CustomEvent) {
   await get(true)
   const target = $event.target as any
   target.complete()
+}
+
+async function submitApp() {
+  const modal = await modalController.create({
+    component: SubmitAppModal,
+  })
+  modal.present()
+  const { data, role } = await modal.onWillDismiss()
+  if (role === 'confirm') {
+    const dataTyped = data as {name: string, link?: string, desc?: string}
+    try {
+      await applicationStore.suggest(dataTyped.name, dataTyped.link, dataTyped.desc)
+      const toast = await toastController.create({
+        message: 'ارسال شد!',
+        duration: 1500,
+        position: 'top',
+        icon: checkmark
+      });
+      await toast.present();
+    } catch (err) {
+      const error = err as AxiosError
+      const toast = await toastController.create({
+        message: 'خطا در ارسال پیشنهاد، لطفا مجددا تلاش کنید.',
+        duration: 3000,
+        position: 'top',
+        icon: close
+      });
+      await toast.present();
+    }
+  }
 }
 
 onMounted(() => {
