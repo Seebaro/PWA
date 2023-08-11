@@ -7,6 +7,7 @@ import TabList from '@/views/TabList.vue';
 import TabSettings from '@/views/TabSettings.vue';
 import ItemPage from '@/views/ItemPage.vue';
 import { createEnhancedMemoryHistory } from './history';
+import util from '@/util';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -49,7 +50,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createEnhancedMemoryHistory(import.meta.env.BASE_URL),
+  history: util.userAgent.iOS && util.userAgent.standalone ? createEnhancedMemoryHistory(import.meta.env.BASE_URL) : createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 

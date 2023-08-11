@@ -114,7 +114,7 @@ ion-button {
 .screenshot {
   height: 12rem;
   flex-shrink: 0;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   border: 0.5px solid var(--border-color);
   scroll-snap-align: start;
   background-size: cover;
