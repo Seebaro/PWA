@@ -32,8 +32,9 @@
 import type { MApp } from '@/models'
 import { useApplicationStore } from '@/stores/application';
 
-import { IonItem, IonImg, IonNote, IonLabel, IonButton, IonSpinner } from '@ionic/vue'
+import { IonItem, IonImg, IonNote, IonLabel, IonButton, IonSpinner, toastController } from '@ionic/vue'
 import { ref } from 'vue';
+import { close } from 'ionicons/icons';
 
 const props = defineProps<{
   app: MApp,
@@ -48,7 +49,13 @@ async function install($event: Event) {
   try {
     await applicationStore.download(props.app)
   } catch (err) {
-
+    const toast = await toastController.create({
+      message: 'در زمان ساین کردن خطایی رخ داد.',
+      duration: 3000,
+      position: 'top',
+      icon: close
+    });
+    await toast.present();
   }
   installing.value = false
 }
