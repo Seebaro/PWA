@@ -62,8 +62,10 @@
         <ion-list-header>
           <ion-label>درباره</ion-label>
         </ion-list-header>
-        <ion-item class="ion-padding">
-          <p>{{ app.description }}</p>
+        <ion-item class="ion-padding" style="display: block;">
+          <div>
+            <p dir="auto" v-for="line in app.description.split('\n')">{{ line }}</p>
+          </div>
         </ion-item>
       </ion-list>
     </ion-content>
