@@ -18,6 +18,7 @@ export interface MApp {
   screenshots: MScreenshot[]
   icon: string
   version: string
+  ipa_size: string
 }
 
 export interface MAppManifest {
