@@ -34,7 +34,7 @@
               <ion-note>{{ app.subtitle }}</ion-note>
               <div v-if="!installing" class="download-container">
                 <ion-button size="small" shape="round" @click="install">نصب</ion-button>
-                <ion-badge>نسخه {{ app.version }}</ion-badge>
+                <ion-badge>نسخه {{ app.version }} | <span style="direction: ltr;">{{ app.ipa_size }}</span></ion-badge>
               </div>
               <ion-spinner v-else></ion-spinner>
             </div>
