@@ -17,6 +17,7 @@ export interface MApp {
   description: string
   screenshots: MScreenshot[]
   icon: string
+  version: string
 }
 
 export interface MAppManifest {

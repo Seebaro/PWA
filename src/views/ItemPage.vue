@@ -32,7 +32,10 @@
             <div class="title-inner">
               <ion-label style="white-space: normal;">{{ app.title }}</ion-label>
               <ion-note>{{ app.subtitle }}</ion-note>
-              <ion-button v-if="!installing" size="small" shape="round" @click="install">نصب</ion-button>
+              <div v-if="!installing" class="download-container">
+                <ion-button size="small" shape="round" @click="install">نصب</ion-button>
+                <ion-badge>نسخه {{ app.version }}</ion-badge>
+              </div>
               <ion-spinner v-else></ion-spinner>
             </div>
           </div>
@@ -76,7 +79,7 @@
 <script setup lang="ts">
 import type { MApp, MAppType } from '@/models';
 import { useApplicationStore } from '@/stores/application';
-import { IonList, IonListHeader, IonPage, IonHeader, IonToolbar, IonContent, IonBackButton, IonButtons, IonItem, IonImg, IonLabel, IonNote, IonButton, IonSpinner, toastController } from '@ionic/vue';
+import { IonList, IonListHeader, IonPage, IonBadge, IonHeader, IonToolbar, IonContent, IonBackButton, IonButtons, IonItem, IonImg, IonLabel, IonNote, IonButton, IonSpinner, toastController } from '@ionic/vue';
 import { close, cloudOffline, refresh } from 'ionicons/icons';
 import type { AxiosError } from 'axios';
 import { ref, watch } from 'vue';
@@ -211,5 +214,18 @@ ion-button {
 .fullpage ion-button ion-icon {
   position: absolute;
   inset-inline-start: 0;
+}
+
+ion-badge {
+  --background: var(--border-color);
+  display: inline-block;
+  height: 1.25rem;
+  padding-top: 0.25rem;
+}
+.download-container {
+  gap: 0.5rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <ion-app>
-    <user-agent-page v-if="!util.userAgent.iOS || !util.userAgent.standalone"></user-agent-page>
+    <user-agent-page @close="uaPageOpen = false" v-if="uaPageOpen && util.userAgent.iOS && !util.userAgent.standalone"></user-agent-page>
     <s-w-update-page @update="updateServiceWorker()" v-else-if="needRefresh"></s-w-update-page>
     <ion-router-outlet v-else />
   </ion-app>
@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
 import { useUserStore } from './stores/user';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import UserAgentPage from './views/UserAgentPage.vue';
 import util from './util';
@@ -29,6 +29,8 @@ watch(() => userStore.isAuthenticated, (isAuthenticated) => {
 
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import SWUpdatePage from './views/SWUpdatePage.vue';
+
+const uaPageOpen = ref(true)
 
 const {
   needRefresh,

@@ -1,16 +1,7 @@
 <template>
   <ion-page>
     <ion-content>
-      <div class="container ion-padding" v-if="!util.userAgent.iOS">
-        <Logo class="icon-large"></Logo>
-        <h1>خطا!</h1>
-        <p>برای دسترسی به سایت از طریق 
-          <span class="highlighted">iPhone</span>
-          یا 
-          <span class="highlighted">iPad</span>
-          خود اقدام کنید</p>
-      </div>
-      <div class="container ion-padding center" v-else>
+      <div class="container ion-padding center">
         <Logo class="icon-small"></Logo>
         <h5>برای دسترسی به سایت اپلیکیشن را به صفحه اصلی اضافه کنید</h5>
         <div class="grid">
@@ -35,16 +26,19 @@
           </div>
           <div class="highlighted">Add</div>
         </div>
+        <ion-button @click="$emit('close')" expand="block">بستن</ion-button>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonPage, IonIcon } from '@ionic/vue';
+import { IonContent, IonPage, IonIcon, IonButton } from '@ionic/vue';
 import { shareOutline, addOutline } from 'ionicons/icons'
 import util from '@/util';
 import Logo from '@/assets/Logo.vue'
+
+const emits = defineEmits(['close'])
 </script>
 
 <style scoped>
@@ -83,6 +77,7 @@ import Logo from '@/assets/Logo.vue'
   font-size: 0.8rem;
   text-align: start;
   line-height: 1;
+  max-width: 25rem;
 }
 ion-icon {
   font-size: 1.5rem;
@@ -91,5 +86,11 @@ ion-icon {
   border: 1px solid currentColor; 
   border-radius: 5px; 
   scale: 0.7;
+}
+
+ion-button {
+  width: calc(100% - 2.4rem);
+  max-width: 22.6rem;
+  margin-top: 1rem;
 }
 </style>
