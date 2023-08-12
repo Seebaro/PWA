@@ -4,7 +4,7 @@
       <div class="title-container">
         <ion-img class="icon" :src="app.icon"></ion-img>
         <div class="title-inner">
-          <ion-label thin>{{ app.title }}</ion-label>
+          <ion-label>{{ app.title }}</ion-label>
           <ion-note>{{ app.subtitle }}</ion-note>
         </div>
         <ion-button v-if="!installing" size="small" shape="round" @click="install">نصب</ion-button>
@@ -128,5 +128,10 @@ ion-button {
 }
 .screenshot > svg {
   height: 100%;
+}
+
+.title-inner ion-label {
+  word-wrap: normal;
+  white-space: normal;
 }
 </style>
