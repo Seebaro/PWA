@@ -19,6 +19,8 @@ export interface MApp {
   icon: string
   version: string
   ipa_size: string
+  created_at: string
+  updated_at: string
 }
 
 export interface MAppManifest {

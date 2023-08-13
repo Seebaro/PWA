@@ -2,13 +2,21 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-select interface="popover" v-model="sort">
+            <ion-select-option value="new">جدید</ion-select-option>
+            <ion-select-option value="old">قدیمی</ion-select-option>
+            <ion-select-option value="update">آپدیت</ion-select-option>
+            <ion-select-option value="a-z">الفبا</ion-select-option>
+          </ion-select>
+        </ion-buttons>
         <ion-title>{{ type === 'game' ? 'بازی ها' : 'اپلیکیشن ها' }}</ion-title>
         <ion-buttons slot="end">
           <ion-button @click="submitApp()">درخواست</ion-button>
         </ion-buttons>
       </ion-toolbar>
       <ion-toolbar>
-        <ion-searchbar :disabled="loading" :debounce="500" v-model="searchQuery" @ionInput="search" placeholder="جست و جو" inputmode="search"></ion-searchbar>
+        <ion-searchbar :disabled="loading" v-model="searchQuery" @ionInput="search" placeholder="جست و جو" inputmode="search"></ion-searchbar>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -60,20 +68,31 @@
   position: absolute;
   inset-inline-start: 0;
 }
+
+ion-select {
+  color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
+  --fill: var(--ion-color-primary);
+  padding-inline-start: 0.4rem;
+}
+ion-select::part(icon) {
+  color: var(--ion-color-primary);
+}
 </style>
   
 <script setup lang="ts">
 import AppItem from '@/components/AppItem.vue';
 import SubmitAppModal from '@/components/SubmitAppModal.vue'
 import { MAppType, MApp } from '@/models';
-import { IonButtons, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonRefresher, IonRefresherContent, IonIcon, IonSpinner, IonButton, toastController, modalController } from '@ionic/vue';
+import { IonButtons, IonSelect, IonSelectOption, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonRefresher, IonRefresherContent, IonIcon, IonSpinner, IonButton, toastController, modalController } from '@ionic/vue';
 import { checkmark, close, cloudOffline, refresh } from 'ionicons/icons';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useApplicationStore } from '@/stores/application'
 import type { AxiosError } from 'axios';
 import ContentPlaceholder from '@/assets/ContentPlaceholder.vue'
 
 const searchQuery = ref('')
+const sort = ref<'new' | 'old' | 'update' | 'a-z'>('new')
 
 const items = ref<MApp[]>()
 const itemsFiltered = ref<MApp[]>()
@@ -93,7 +112,18 @@ async function get(refresh: boolean = false) {
   searchQuery.value = ''
   try {
     const allItems = await applicationStore.get(refresh)
-    items.value = allItems.filter(x => x.type === props.type)
+    items.value = allItems.filter(x => x.type === props.type).sort((x, y) => {
+      switch (sort.value) {
+      case 'new':
+        return (new Date(y.created_at)).getTime() - (new Date(x.created_at)).getTime()
+      case 'old':
+        return (new Date(x.created_at)).getTime() - (new Date(y.created_at)).getTime()
+      case 'update':
+        return (new Date(y.updated_at)).getTime() - (new Date(x.updated_at)).getTime()
+      case 'a-z':
+        return x.title == y.title ? 0 : (x.title > y.title ? 1 : -1)
+      }
+    })
     itemsFiltered.value = items.value
   } catch (err) {
     error.value = err as AxiosError
@@ -154,6 +184,10 @@ async function submitApp() {
     }
   }
 }
+
+watch(() => sort.value, sort => {
+  get()
+})
 
 onMounted(() => {
   get()
