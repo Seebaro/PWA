@@ -10,7 +10,7 @@
             <ion-select-option value="a-z">الفبا</ion-select-option>
           </ion-select>
         </ion-buttons>
-        <ion-title>{{ type === 'game' ? 'بازی ها' : 'اپلیکیشن ها' }}</ion-title>
+        <ion-title @click="content?.$el.scrollToTop(200)">{{ type === 'game' ? 'بازی ها' : 'اپلیکیشن ها' }}</ion-title>
         <ion-buttons slot="end">
           <ion-button @click="submitApp()">درخواست</ion-button>
         </ion-buttons>
@@ -19,7 +19,7 @@
         <ion-searchbar :disabled="loading" v-model="searchQuery" @ionInput="search" placeholder="جست و جو" inputmode="search"></ion-searchbar>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content ref="content">
       <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
@@ -98,6 +98,8 @@ const items = ref<MApp[]>()
 const itemsFiltered = ref<MApp[]>()
 const loading = ref(false)
 const error = ref<AxiosError>()
+
+const content = ref<InstanceType<typeof IonContent>>()
 
 const props = defineProps<{
   type: MAppType
