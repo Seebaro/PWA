@@ -19,6 +19,7 @@
             :style="`background-image: url('${screenshot.image}');`"
           >
             <svg :viewBox="`0 0 ${screenshot.width} ${screenshot.height}`"></svg>
+            <ion-img class="screenshot-inner" :src="screenshot.image"></ion-img>
           </div>
           <div style="flex-shrink: 0;width: 0.1px"></div>
         </div>
@@ -122,9 +123,18 @@ ion-button {
   height: 12rem;
   flex-shrink: 0;
   border-radius: 0.5rem;
+  overflow: hidden;
   border: 0.5px solid var(--border-color);
   scroll-snap-align: start;
   background-size: cover;
+  position: relative;
+}
+.screenshot-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .screenshot > svg {
   height: 100%;
