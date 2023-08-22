@@ -16,7 +16,6 @@
           <div 
             class="screenshot"
             v-for="screenshot in app.screenshots"
-            :style="`background-image: url('${screenshot.image}');`"
           >
             <svg :viewBox="`0 0 ${screenshot.width} ${screenshot.height}`"></svg>
             <ion-img class="screenshot-inner" :src="screenshot.image"></ion-img>
