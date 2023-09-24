@@ -37,7 +37,10 @@
         </ion-button>
       </div>
       <div style="display: content;" v-else-if="items && items.length > 0">
-        <app-item v-for="item in itemsFiltered" :app="item"></app-item>
+        <app-item v-for="item in paginatedCount == 0 ? [] : itemsFiltered?.slice(0, paginatedCount)" :app="item"></app-item>
+        <ion-infinite-scroll v-if="paginatedCount > 0" @ionInfinite="infiniteScrollAction">
+          <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
       </div>
       <div class="ion-padding fullpage" v-else>
         <ContentPlaceholder style="max-width: calc(100%-50px);"></ContentPlaceholder>
@@ -84,7 +87,7 @@ ion-select::part(icon) {
 import AppItem from '@/components/AppItem.vue';
 import SubmitAppModal from '@/components/SubmitAppModal.vue'
 import { MAppType, MApp } from '@/models';
-import { IonButtons, IonSelect, IonSelectOption, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonRefresher, IonRefresherContent, IonIcon, IonSpinner, IonButton, toastController, modalController } from '@ionic/vue';
+import { IonButtons, IonInfiniteScroll, IonInfiniteScrollContent, IonSelect, IonSelectOption, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonRefresher, IonRefresherContent, IonIcon, IonSpinner, IonButton, toastController, modalController, InfiniteScrollCustomEvent } from '@ionic/vue';
 import { checkmark, close, cloudOffline, refresh } from 'ionicons/icons';
 import { onMounted, ref, watch } from 'vue';
 import { useApplicationStore } from '@/stores/application'
@@ -98,6 +101,7 @@ const items = ref<MApp[]>()
 const itemsFiltered = ref<MApp[]>()
 const loading = ref(false)
 const error = ref<AxiosError>()
+const paginatedCount = ref<number>(0)
 
 const content = ref<InstanceType<typeof IonContent>>()
 
@@ -106,6 +110,22 @@ const props = defineProps<{
 }>()
 
 const applicationStore = useApplicationStore()
+
+function loadNextPage() {
+  paginatedCount.value = Math.min(paginatedCount.value + 20, itemsFiltered.value?.length ?? 0);
+}
+
+function infiniteScrollAction(ev: InfiniteScrollCustomEvent) {
+  loadNextPage()
+  window.setTimeout(() => {
+    ev.target.complete()
+  }, 500)
+}
+
+watch(() => itemsFiltered.value, itemsFiltered => {
+  paginatedCount.value = 0
+  loadNextPage()
+})
 
 async function get(refresh: boolean = false) {
   if (loading.value) return
